@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: exchangeapi
+
+  cloud:
+    config:
+      enabled: true
+      profiles: default
+      label: ${spring.application.name}
+      name: redis,dubbo,webserver,exchangeapi
+      #uri: http://config.idinbao.com:9999
+      uri: http://localhost:9999

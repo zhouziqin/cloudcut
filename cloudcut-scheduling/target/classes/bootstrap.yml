@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: scheduling
+
+  cloud:
+    config:
+      enabled: true
+      profiles: default
+      label: ${spring.application.name}
+      name: jdbc,order.timeout,redis,elastic-job
+      #uri: http://config.idinbao.com:9999
+      uri: http://localhost:9999

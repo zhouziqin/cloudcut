@@ -1,0 +1,45 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>cloudcut</groupId>
+  <artifactId>cloudcut</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+ 
+	<modules>
+		<module>cloudcut-dao</module>
+ 	 	<module>cloudcut-db-model</module>
+ 	 	<module>cloudcut-common</module>
+  	 	<module>cloudcut-elsearch</module>
+ 	 	<module>cloudcut-scheduling</module>
+ 	 	<module>cloudcut-service</module>  		
+ 		<module>cloudcut-api-exchange</module>
+ 		<module>cloudcut-api-web</module>
+ 		<module>cloudcut-redis</module>
+	</modules>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java.version>1.7</java.version>
+	</properties>
+	
+	<dependencies>
+	 
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

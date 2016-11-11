@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/tx
+                        http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.mainiway.cloudcut.dao.EncryptDataSource">
+		<property name="driver" value="${jdbc.driverClassName}" />
+		<property name="driverUrl" value="${jdbc.url}" />
+		<property name="maximumConnectionCount" value="${proxool.maxConnCount}" />
+		<property name="minimumConnectionCount" value="${proxool.minConnCount}" />
+		<property name="statistics" value="${proxool.statistics}" />
+		<property name="simultaneousBuildThrottle" value="${proxool.simultaneousBuildThrottle}" />
+		<property name="trace" value="${proxool.trace}" />
+		<property name="houseKeepingTestSql" value="${proxool.houseKeepingTestSql}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="alias" value="comm" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis.xml" />
+	</bean>
+
+	<!-- 程序中使用 -->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory" />
+	</bean>
+
+	<bean id="txManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<!-- 事务控制 程序中使用注解 @org.springframework.transaction.annotation.Transactional -->
+	<tx:annotation-driven transaction-manager="txManager" />
+</beans>

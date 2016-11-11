@@ -1,0 +1,208 @@
+﻿<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>post接口测试</title>
+<meta name="author" content="EWININFO" />
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE11"><!--IE11 mode-->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10"><!--IE10 mode-->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9"><!--IE9 mode-->
+<meta name="description" content="MES" />
+<meta name="keywords" content="FlexEngine平台MES系统" />
+<meta name="Resource-type" content="Document" />
+
+</head>
+
+<body>
+<div style="margin-bottom:30px;">
+	模块参数:<select id="moduleName" style="width:200px;margin-right:100px" value=""></select>
+	接口地址:<select id="interfaceUrl" style="width:400px;"></select>
+</div>
+
+
+<div style="margin-bottom:30px;">
+	post-param:<input type="text" id="param" style="width:81%;height:30px" value="">
+</div>
+
+
+<div style="margin-bottom:30px;">
+	请求地址:<input type="text" id="requestUrl" style="width:82%" value="">
+</div>
+
+<div>
+测试结果：<span id="resultNum" style="margin-left:10px;font-size:12px;"></span>
+<textarea id="result" style="width:100%;height:600px;margin-top:10px;font-size:14px;overflow:auto;"></textarea>
+</div>
+
+<div style="width:200px;margin:auto;padding-top:30px;">
+	<input type="button" id="submit" value="提交" style="font-size:16px;width:80px;height:30px;margin-left:10px;">
+</div>
+<script type="text/javascript" src="../views/js/idinbao/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+	$(function(){
+		 baseurl = window.location.href;
+
+		 urltemp = baseurl.substring(0,baseurl.lastIndexOf("/"));
+
+		 url = urltemp.substring(0,urltemp.lastIndexOf("/"));
+
+		$("#requestUrl").val(url);
+
+		getModuleNameList();
+
+
+		$("#submit").click(function(){
+			submit();
+		})
+
+		$("#interfaceUrl").change(function(){
+			changeComboBox();
+		})
+
+		$("#moduleName").change(function(){
+			getUrlList($("#moduleName").val());
+			changeComboBox();
+		})
+
+	})
+
+	//提交
+	function submit(){
+		$("#result").text("");
+
+		$.ajax({
+			type:"post",
+			url:$("#requestUrl").val(),
+			dataType:"json",
+			async:false,
+			data:{
+				"param":$("#param").val()
+			},
+			statusCode:{
+				404:function(){
+					alert("访问地址不存在或接口参数有误 错误代码404");
+				},
+				500:function(){
+					alert("因为意外情况，服务器不能完成请求 错误代码500");
+				},
+				405:function(){
+					alert("资源被禁止 错误代码405");
+				}
+			},
+			success:function(result){
+				console.log(result);
+				$("#resultNum").html("");
+				if(result.obj){
+					if(result.obj.length){
+						$("#resultNum").html(result.obj.length+"条记录");
+					}
+				}else{
+					$("#resultNum").html("");
+				}
+				$("#result").text(etFormatJsonStrFromString(JSON.stringify(result)));
+			},
+			error:function(result){
+
+				$("#result").text(etFormatJsonStrFromString(JSON.stringify(result)));
+				console.log(result);
+			}
+		})
+	}
+
+	//获取所有模块名称
+	function getModuleNameList()
+	{
+		console.log(url+"/testUtils/getModuleNameList");
+		$.ajax({
+			type:"GET",
+			url:url+"/testUtils/getModuleNameList",
+			dataType:"jsonp",
+			jsonp:"callback",
+			async:false,
+			success:function(result){
+				console.log(result);
+				var setModuleName=result.setModuleName;
+				var modulehtml="";
+				for(var i=0,j=setModuleName.length;i<j;i++)
+				{
+					modulehtml = modulehtml+"<option value='"+setModuleName[i]+"'>"+setModuleName[i]+"</option>";
+				}
+				$("#moduleName").html(modulehtml);
+			},
+			error:function(result)
+			{
+				alert("路径获取失败");
+				console.log(result);
+			}
+		})
+		getUrlList($("#moduleName").val());
+	}
+
+
+	//获取所有action名称
+	function getUrlList(moduleName)
+	{
+		$.ajax({
+			type:"GET",
+			url:url+"/testUtils/getUrlList?moduleName="+ moduleName,
+			dataType:"jsonp",
+			jsonp:"callback",
+			async:false,
+			success:function(result){
+				console.log(result);
+				var interfaceUrlhtml="";
+				var listMapping=result.listMapping;
+				for(var i=0,j=listMapping.length;i<j;i++)
+				{
+					interfaceUrlhtml = interfaceUrlhtml+"<option value='"+listMapping[i].url+"'>"+listMapping[i].url+"</option>";
+				}
+				$("#interfaceUrl").html(interfaceUrlhtml);
+			},
+			error:function(result)
+			{
+				alert("路径获取失败");
+				console.log(result);
+			}
+		})
+		changeComboBox();
+	}
+
+	//下拉框改变值时自动赋值
+	function changeComboBox()
+	{
+		var tempUrl=$("#interfaceUrl").val();
+		$("#requestUrl").val(url+tempUrl);
+	}
+
+	function etFormatJsonStrFromString(jsonStr){
+        var res="";
+        for(var i=0,j=0,k=0,ii,ele;i<jsonStr.length;i++)
+        {//k:缩进，j:""个数
+            ele=jsonStr.charAt(i);
+            if(j%2==0&&ele=="}")
+            {
+                k--;
+                for(ii=0;ii<k;ii++) ele="    "+ele;
+                ele="\n"+ele;
+            }
+            else if(j%2==0&&ele=="{")
+            {
+                ele+="\n";
+                k++;
+                for(ii=0;ii<k;ii++) ele+="    ";
+            }
+            else if(j%2==0&&ele==",")
+            {
+                ele+="\n";
+                for(ii=0;ii<k;ii++) ele+="    ";
+            }
+            else if(ele=="\"") j++;
+            res+=ele;
+        }
+        return res;
+    }
+</script>
+</body>
+</html>

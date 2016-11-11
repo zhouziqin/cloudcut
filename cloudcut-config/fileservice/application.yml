@@ -1,0 +1,18 @@
+server:
+    port: 9919
+    context-path: /
+
+upload:
+    store: 0      # 1 = MongoDb / 0 = fs-system
+    path: /opt/fileservice/uploaded2
+
+spring:
+    http:
+        multipart:
+           max-file-size: 512000KB    #500M
+           max-request-size: 512000KB   #500M
+
+    data:
+        mongodb:
+           host: localhost
+           port: 27017

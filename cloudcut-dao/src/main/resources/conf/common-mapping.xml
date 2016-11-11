@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="common">
+
+	<select id="getCommon" parameterType="com.mainiway.cloudcut.dao.impl.SqlParam" resultType="java.util.HashMap">
+		${sql}
+	</select>
+
+	<update id="updateCommon" parameterType="com.mainiway.cloudcut.dao.impl.SqlParam">
+		${sql}
+	</update>
+
+	<delete id="deleteCommon" parameterType="com.mainiway.cloudcut.dao.impl.SqlParam">
+		${sql}
+	</delete>
+
+	<insert id="insertCommon" parameterType="com.mainiway.cloudcut.dao.impl.SqlParam">
+		${sql}
+	</insert>
+
+</mapper>

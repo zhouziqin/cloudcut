@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: operator
+
+  cloud:
+    config:
+      enabled: true
+      profiles: default
+      label: ${spring.application.name}
+      name: jdbc,message,pathpatterns,redis,webserver,order.timeout,dubbo
+      #uri: http://config.idinbao.com:9999
+      uri: http://localhost:9999
